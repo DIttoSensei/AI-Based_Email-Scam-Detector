@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Email Fraud Detector</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px; }
+    h1 { margin-bottom: 20px; }
+    form { margin-bottom: 20px; }
+    label { font-weight: bold; }
+    .result { margin-top: 20px; padding: 15px; border-radius: 8px; }
+    .safe { background: #e6ffed; border: 1px solid #8de79b; }
+    .suspicious { background: #fffbe6; border: 1px solid #f5d07f; }
+    .fraud { background: #ffe6e6; border: 1px solid #f58b8b; }
+    details { margin-top: 10px; }
+    summary { cursor: pointer; font-weight: bold; }
+    code { background: #f4f4f4; padding: 2px 4px; border-radius: 4px; }
+    ul { margin-left: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Email Fraud & Scam Detector</h1>
+
+  <form method="post">
+    {% csrf_token %}
+    <label>Sender (email):</label><br>
+    {{ form.sender }}<br><br>
+    <label>Subject:</label><br>
+    {{ form.subject }}<br><br>
+    <label>Body:</label><br>
+    {{ form.body }}<br><br>
+    <button type="submit">Analyze</button>
+  </form>
+
+  {% if result %}
+    {% if result.final_label == "Safe" %}
+      <div class="result safe">
+    {% elif result.final_label == "Suspicious" %}
+      <div class="result suspicious">
+    {% else %}
+      <div class="result fraud">
+    {% endif %}
+
+      <h2>Final Verdict: {{ result.final_label }} (Score: {{ result.score|floatformat:1 }}%)</h2>
+      <p><strong>AI Analyzer:</strong> {{ result.ml_label }} (Confidence: {{ result.ml_prob|floatformat:1 }}%)</p>
+
+      <hr>
+      <h3>Triggered Reasons:</h3>
+      <ul>
+        {% for r in result.rules %}
+          <li>{{ r }}</li>
+        {% empty %}
+          <li>None</li>
+        {% endfor %}
+      </ul>
+
+      <details>
+        <summary>View Full AI Analysis</summary>
+        <ul>
+          <li><strong>AI Model Confidence:</strong> {{ result.details.model_confidence }}</li>
+          <li><strong>Keyword Check:</strong> {{ result.details.rules_triggered }}</li>
+          <li><strong>Sender Check:</strong> {{ result.details.sender_check }}</li>
+          <li><strong>URL Check:</strong> {{ result.details.short_urls }}</li>
+          <li><strong>All URLs Found:</strong>
+            {% if result.urls %}
+              {{ result.urls|join:", " }}
+            {% else %}
+              None
+            {% endif %}
+          </li>
+        </ul>
+      </details>
+
+      <details>
+        <summary>User Guidance</summary>
+        <p>{{ result.user_guidance }}</p>
+      </details>
+
+    </div>
+  {% endif %}
+</body>
+</html>

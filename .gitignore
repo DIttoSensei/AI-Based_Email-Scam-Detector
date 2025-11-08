@@ -1,0 +1,63 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django
+*.log
+*.pot
+*.pyc
+*.pyo
+*.sqlite3
+*.db
+db.sqlite3
+media/
+staticfiles/
+local_settings.py
+.env
+.env.*
+
+# Virtual environment
+venv/
+env/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDEs / Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*.DS_Store
+
+# Migrations (optional if you want fresh setup)
+*/migrations/__pycache__/
+*/migrations/*.py
+!*/migrations/__init__.py
+
+# Cache / Temp files
+*.tmp
+*.bak
+*.old
+*.orig
+*.~*
+*.cache
+
+# OS
+Thumbs.db
+Desktop.ini
+
+# Model / ML Artifacts
+*.pkl
+*.h5
+*.model
+*.sav
+
+# Reports / Generated Files
+*.docx
+*.pdf
+*.csv
+*.xlsx
+/mnt/data/
