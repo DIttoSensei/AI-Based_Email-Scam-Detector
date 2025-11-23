@@ -1,7 +1,7 @@
 import re
 import tldextract
 from .classifier import predict
-from .legit_sources import LEGIT_DOMAINS  # you’ll create this file
+from .legit_sources import LEGIT_DOMAINS 
 from urllib.parse import urlparse
 
 def check_legit_sender(sender):
