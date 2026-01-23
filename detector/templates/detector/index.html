@@ -1,82 +1,235 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Email Fraud Detector</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 30px; }
-    h1 { margin-bottom: 20px; }
-    form { margin-bottom: 20px; }
-    label { font-weight: bold; }
-    .result { margin-top: 20px; padding: 15px; border-radius: 8px; }
-    .safe { background: #e6ffed; border: 1px solid #8de79b; }
-    .suspicious { background: #fffbe6; border: 1px solid #f5d07f; }
-    .fraud { background: #ffe6e6; border: 1px solid #f58b8b; }
-    details { margin-top: 10px; }
-    summary { cursor: pointer; font-weight: bold; }
-    code { background: #f4f4f4; padding: 2px 4px; border-radius: 4px; }
-    ul { margin-left: 20px; }
+    /* 1. THE FOUNDATION */
+    body {
+      background-color: #f1f5f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    /* 2. THE MAIN CARD */
+    .main_card {
+      background: white;
+      width: 90%;
+      max-width: 550px;
+      padding: 40px;
+      border-radius: 28px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+      margin: 20px;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      color: #1e293b;
+      margin-bottom: 24px;
+      text-align: center;
+      letter-spacing: -0.5px;
+    }
+
+    /* 3. FORM STYLING */
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: #64748b;
+      margin-bottom: 8px;
+    }
+
+    /* Targeting Django's auto-generated inputs */
+    input, textarea {
+      width: 100%;
+      padding: 14px;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      background-color: #f8fafc;
+      font-size: 1rem;
+      resize: none;
+      scrollbar-width: none;
+      color: #334155;
+      -ms-overflow-style: none;
+      outline: none;
+      transition: all 0.2s ease;
+      box-sizing: border-box; /* Crucial for padding */
+      margin-bottom: 20px; /* Replaces <br> */
+    }
+
+    textarea::-webkit-scrollbar {
+      display: none;
+  }
+
+    input:focus, textarea:focus {
+      border-color: #22c55e; /* Green focus to match your 'limegreen' vibe */
+      background-color: white;
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1);
+    }
+
+    button {
+      width: 100%;
+      padding: 16px;
+      background-color: #32cd32;
+      color: white;
+      border: none;
+      border-radius: 14px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #28a428;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(50, 205, 50, 0.3);
+    }
+
+    /* 4. RESULTS SECTION */
+    .result {
+      margin-top: 30px;
+      padding: 24px;
+      border-radius: 18px;
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .safe { background-color: #f0fdf4; color: #166534; border: 3px solid #22c55e; }
+    .suspicious { background-color: #fffbeb; color: #92400e; border: 3px solid #f59e0b; }
+    .fraud { background-color: #fef2f2; color: #991b1b; border: 3px solid #ef4444; }
+
+    .result h2 {
+      margin-top: 0;
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    hr {
+      border: 0;
+      border-top: 1px solid rgba(0,0,0,0.1);
+      margin: 15px 0;
+    }
+
+    /* 5. DETAILS & TECHNICAL DATA */
+    details {
+      margin-top: 15px;
+      background: rgba(255, 255, 255, 0.5);
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #475569;
+      outline: none;
+    }
+
+    .details-content {
+      margin-top: 10px;
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+
+    ul {
+      margin: 10px 0 0 20px;
+      padding: 0;
+    }
+
+    code {
+      background: #f1f5f9;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+    }
   </style>
 </head>
 <body>
-  <h1>Email Fraud & Scam Detector</h1>
 
-  <form method="post">
-    {% csrf_token %}
-    <label>Sender (email):</label><br>
-    {{ form.sender }}<br><br>
-    <label>Subject:</label><br>
-    {{ form.subject }}<br><br>
-    <label>Body:</label><br>
-    {{ form.body }}<br><br>
-    <button type="submit">Analyze</button>
-  </form>
+  <main class="main_card">
+    <h1>Email Scam Detector</h1>
 
-  {% if result %}
-    {% if result.final_label == "Safe" %}
-      <div class="result safe">
-    {% elif result.final_label == "Suspicious" %}
-      <div class="result suspicious">
-    {% else %}
-      <div class="result fraud">
-    {% endif %}
+    <form method="post">
+      {% csrf_token %}
+      
+      <label for="id_sender">Sender Address</label>
+      {{ form.sender }}
 
-      <h2>Final Verdict: {{ result.final_label }} (Score: {{ result.score|floatformat:1 }}%)</h2>
-      <p><strong>AI Analyzer:</strong> {{ result.ml_label }} (Confidence: {{ result.ml_prob|floatformat:1 }}%)</p>
+      <label for="id_subject">Email Subject</label>
+      {{ form.subject }}
 
-      <hr>
-      <h3>Triggered Reasons:</h3>
-      <ul>
-        {% for r in result.rules %}
-          <li>{{ r }}</li>
-        {% empty %}
-          <li>None</li>
-        {% endfor %}
-      </ul>
+      <label for="id_body">Message Content</label>
+      {{ form.body }}
 
-      <details>
-        <summary>View Full AI Analysis</summary>
+      <button type="submit">Analyze Message</button>
+    </form>
+
+    {% if result %}
+      <div class="result {% if result.final_label == 'Low Risk: Safe' %}safe{% elif result.final_label == 'Needs Review: Suspicious' %}suspicious{% else %}fraud{% endif %}">
+        
+        <h2>
+          {% if result.final_label == "Low Risk: Safe" %}✅{% elif result.final_label == "Needs Review: Suspicious" %}⚠️{% else %}🚫{% endif %}
+          {{ result.final_label }} ({{ result.score|floatformat:1 }}%)
+        </h2>
+        
+        <p><strong>AI Confidence:</strong> {{ result.ml_prob|floatformat:1 }}%</p>
+
+        <hr>
+        
+        <strong>Flagged Indicators:</strong>
         <ul>
-          <li><strong>AI Model Confidence:</strong> {{ result.details.model_confidence }}</li>
-          <li><strong>Keyword Check:</strong> {{ result.details.rules_triggered }}</li>
-          <li><strong>Sender Check:</strong> {{ result.details.sender_check }}</li>
-          <li><strong>URL Check:</strong> {{ result.details.short_urls }}</li>
-          <li><strong>All URLs Found:</strong>
-            {% if result.urls %}
-              {{ result.urls|join:", " }}
-            {% else %}
-              None
-            {% endif %}
-          </li>
+          {% for r in result.rules %}
+            <li>{{ r }}</li>
+          {% empty %}
+            <li>No major threats detected.</li>
+          {% endfor %}
         </ul>
-      </details>
 
-      <details>
-        <summary>User Guidance</summary>
-        <p>{{ result.user_guidance }}</p>
-      </details>
+        <details>
+          <summary>View Technical Breakdown</summary>
+          <div class="details-content">
+            <p><strong>Keywords:</strong> {{ result.details.rules_triggered }}</p>
+            <p><strong>Sender Verif:</strong> {{ result.details.sender_check }}</p>
+            <p><strong>URLs:</strong> 
+              {% if result.urls %}
+                <code>{{ result.urls|join:", " }}</code>
+              {% else %}
+                None
+              {% endif %}
+            </p>
+          </div>
+        </details>
 
-    </div>
-  {% endif %}
+        <details>
+          <summary>User Guidance</summary>
+          <div class="details-content">
+            <p>{{ result.user_guidance }}</p>
+          </div>
+        </details>
+      </div>
+    {% endif %}
+  </main>
+
 </body>
 </html>
