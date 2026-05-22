@@ -25,33 +25,33 @@ It analyzes sender authenticity, suspicious URLs, keywords, and tone to determin
 ## Setup Instructions
 
 ### 1. Clone the Repository
-\`\`\`bash
+```bash
 git clone https://github.com/DIttoSensei/AI-Based_Email-Scam-Detector.git
 cd AI-Based_Email-Scam-Detector
-\`\`\`
+```
 
 ### 2. Create and Activate a Virtual Environment
-\`\`\`bash
+```bash
 python -m venv venv
 venv\Scripts\activate   # On Windows
 source venv/bin/activate  # On macOS/Linux
-\`\`\`
+```
 
 ### 3. Install Dependencies
-\`\`\`bash
+```bash
 pip install -r requirements.txt
-\`\`\`
+```
 
 ### 4. Run Database Migrations
-\`\`\`bash
+```bash
 python manage.py makemigrations
 python manage.py migrate
-\`\`\`
+```
 
 ### 5. Run the Development Server
-\`\`\`bash
+```bash
 python manage.py runserver
-\`\`\`
+```
 
 ---
 
@@ -59,14 +59,14 @@ python manage.py runserver
 
 The core detection intelligence lives inside the application directory within a dedicated subsystem folder structure:
 
-\`\`\`text
+```text
 ├── datasets/             # Storage folder containing the training raw CSV files
 ├── engine/               # Core detection subsystem
 │   ├── __init__.py
 │   ├── classifier.py     # Handles model verification, loading, and text predictions
 │   ├── analyzer.py       # Combines ML output with heuristic string scanning rules
 │   └── model.joblib      # The compiled, trained machine learning model binary
-\`\`\`
+```
 
 ---
 
@@ -74,7 +74,7 @@ The core detection intelligence lives inside the application directory within a 
 
 Think of this detector as a secure border checkpoint run by two different types of security guards working together: The Veteran Inspector (Rules-Based Engine) and The Data Profiler (Machine Learning Model).
 
-\`\`\`text
+```text
                   ┌──────────────────────────────┐
                   │ Uploaded Email Message File  │
                   └──────────────┬───────────────┘
@@ -98,7 +98,7 @@ Think of this detector as a secure border checkpoint run by two different types 
                   └──────────────┬───────────────┘
                                  ▼
                      Final Risk Verdict Issued
-\`\`\`
+```
 
 ### The Veteran Inspector (Rule-Based Engine)
 This part follows a strict, explicit checklist. It doesn't guess; it scans the string characters directly for known red flags:
@@ -119,7 +119,7 @@ When you drag and drop or upload an `.eml` file into the frontend, it undergoes 
 
 An `.eml` file is actually a structured block text document that looks like this behind the scenes:
 
-\`\`\`text
+```text
 From: "Security Update" <spoofed-login@attacker-node.net>
 Subject: Action Required: Account Compromise
 Content-Type: multipart/alternative; boundary="boundary_marker"
@@ -129,7 +129,7 @@ Content-Type: text/plain; charset="UTF-8"
 
 We detected an unauthorized access attempt on your profile. Update now.
 --boundary_marker
-\`\`\`
+```
 
 Because your custom detection engine needs clean textual elements, the code unrolls this raw file automatically:
 
@@ -143,12 +143,12 @@ Because your custom detection engine needs clean textual elements, the code unro
 
 The pre-compiled `model.joblib` binary file was created through an optimization training pipeline using the text data stored inside your `datasets/` folder.
 
-\`\`\`text
+```text
 ┌──────────────┐      ┌─────────────────┐      ┌────────────────┐      ┌──────────────┐
 │ Training CSV │ ───> │ Text Tokenizer/ │ ───> │ Classification │ ───> │ Output Model │
 │   Dataset    │      │  Vectorization  │      │   Algorithm    │      │ (model.joblib)│
 └──────────────┘      └─────────────────┘      └────────────────┘      └──────────────┘
-\`\`\`
+```
 
 ### 1. Data Aggregation
 The process starts with labeled raw training data inside the `datasets/` directory. This data consists of rows of historic email exchanges categorized cleanly into explicit classes: `1` for documented phishing/fraud messages, and `0` (or `-1`) for normal, legitimate corporate or personal correspondence.
