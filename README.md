@@ -26,7 +26,7 @@ It analyzes sender authenticity, suspicious URLs, keywords, and tone to determin
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/DIttoSensei/AI-Based_Email-Scam-Detector.git
+git clone -b version_2 https://github.com/DIttoSensei/AI-Based_Email-Scam-Detector.git
 cd AI-Based_Email-Scam-Detector
 ```
 
