@@ -5,32 +5,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Email Fraud Detector</title>
   <style>
-    /* 1. THE FOUNDATION */
+    /* 1. THE FOUNDATION (Gemini Space Dark theme) */
     body {
-      background-color: #f1f5f9;
+      background-color: #080b11;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(16, 24, 48, 0.8) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(29, 16, 56, 0.6) 0%, transparent 50%);
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
       margin: 0;
       font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #f1f5f9;
     }
 
-    /* 2. THE MAIN CARD */
+    /* 2. THE MAIN CARD (Glassmorphism Effect) */
     .main_card {
-      background: white;
+      background: rgba(13, 18, 30, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       width: 90%;
       max-width: 550px;
       padding: 40px;
       border-radius: 28px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
       margin: 20px;
     }
 
     h1 {
-      font-size: 1.8rem;
-      color: #1e293b;
-      margin-bottom: 24px;
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #a5b4fc 0%, #6366f1 50%, #4f46e5 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 28px;
       text-align: center;
       letter-spacing: -0.5px;
     }
@@ -46,64 +56,61 @@
       font-size: 0.75rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 1.2px;
-      color: #64748b;
-      margin-bottom: 8px;
+      letter-spacing: 1.5px;
+      color: #94a3b8;
+      margin-bottom: 10px;
     }
 
-    /* Targeting Django's auto-generated inputs */
-    input, textarea {
+    /* Gemini-inspired File Upload Box */
+    input[type="file"] {
       width: 100%;
-      padding: 14px;
-      border: 2px solid #e2e8f0;
-      border-radius: 12px;
-      background-color: #f8fafc;
-      font-size: 1rem;
-      resize: none;
-      scrollbar-width: none;
-      color: #334155;
-      -ms-overflow-style: none;
+      padding: 30px 20px;
+      border: 2px dashed rgba(99, 102, 241, 0.3);
+      border-radius: 16px;
+      background-color: rgba(15, 23, 42, 0.6);
+      font-size: 0.95rem;
+      color: #cbd5e1;
       outline: none;
-      transition: all 0.2s ease;
-      box-sizing: border-box; /* Crucial for padding */
-      margin-bottom: 20px; /* Replaces <br> */
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+      margin-bottom: 24px;
+      cursor: pointer;
+      text-align: center;
     }
 
-    textarea::-webkit-scrollbar {
-      display: none;
-  }
-
-    input:focus, textarea:focus {
-      border-color: #22c55e; /* Green focus to match your 'limegreen' vibe */
-      background-color: white;
-      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1);
+    input[type="file"]:hover, input[type="file"]:focus {
+      border-color: #818cf8;
+      background-color: rgba(99, 102, 241, 0.08);
+      box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
     }
 
+    /* Submit Button with Gradient Accent */
     button {
       width: 100%;
       padding: 16px;
-      background-color: #32cd32;
+      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
       color: white;
       border: none;
       border-radius: 14px;
       font-size: 1rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s;
-      margin-top: 10px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
     }
 
     button:hover {
-      background-color: #28a428;
       transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(50, 205, 50, 0.3);
+      box-shadow: 0 8px 20px rgba(79, 70, 229, 0.45);
+      background: linear-gradient(135deg, #818cf8 0%, #4f46e5 100%);
     }
 
-    /* 4. RESULTS SECTION */
+    /* 4. RESULTS SECTION (Glow borders instead of solid light blocks) */
     .result {
-      margin-top: 30px;
+      margin-top: 32px;
       padding: 24px;
-      border-radius: 18px;
+      border-radius: 20px;
+      background: rgba(15, 23, 42, 0.8);
       animation: fadeIn 0.4s ease-out;
     }
 
@@ -112,56 +119,74 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .safe { background-color: #f0fdf4; color: #166534; border: 3px solid #22c55e; }
-    .suspicious { background-color: #fffbeb; color: #92400e; border: 3px solid #f59e0b; }
-    .fraud { background-color: #fef2f2; color: #991b1b; border: 3px solid #ef4444; }
+    /* Status Glow Colors */
+    .safe { border: 1px solid rgba(34, 197, 94, 0.4); box-shadow: 0 0 15px rgba(34, 197, 94, 0.1); color: #e2f8e9; }
+    .suspicious { border: 1px solid rgba(245, 158, 11, 0.4); box-shadow: 0 0 15px rgba(245, 158, 11, 0.1); color: #fef3c7; }
+    .fraud { border: 1px solid rgba(239, 68, 68, 0.4); box-shadow: 0 0 15px rgba(239, 68, 68, 0.1); color: #fef2f2; }
 
     .result h2 {
       margin-top: 0;
-      font-size: 1.25rem;
+      font-size: 1.35rem;
       display: flex;
       align-items: center;
       gap: 10px;
+      font-weight: 600;
     }
+    
+    .safe h2 { color: #4ade80; }
+    .suspicious h2 { color: #fbbf24; }
+    .fraud h2 { color: #f87171; }
 
     hr {
       border: 0;
-      border-top: 1px solid rgba(0,0,0,0.1);
-      margin: 15px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      margin: 18px 0;
     }
 
     /* 5. DETAILS & TECHNICAL DATA */
     details {
       margin-top: 15px;
-      background: rgba(255, 255, 255, 0.5);
-      padding: 10px;
-      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     summary {
       cursor: pointer;
       font-weight: 600;
       font-size: 0.85rem;
-      color: #475569;
+      color: #94a3b8;
       outline: none;
     }
 
+    summary:hover {
+      color: #cbd5e1;
+    }
+
     .details-content {
-      margin-top: 10px;
+      margin-top: 12px;
       font-size: 0.85rem;
       line-height: 1.6;
+      color: #cbd5e1;
     }
 
     ul {
-      margin: 10px 0 0 20px;
+      margin: 12px 0 0 20px;
       padding: 0;
     }
 
+    li {
+      margin-bottom: 6px;
+    }
+
     code {
-      background: #f1f5f9;
-      padding: 2px 6px;
-      border-radius: 4px;
+      background: rgba(15, 23, 42, 0.8);
+      padding: 3px 8px;
+      border-radius: 6px;
       font-family: monospace;
+      color: #f472b6;
+      border: 1px solid rgba(255, 255, 255, 0.05);
     }
   </style>
 </head>
@@ -170,17 +195,11 @@
   <main class="main_card">
     <h1>Email Scam Detector</h1>
 
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
       
-      <label for="id_sender">Sender Address</label>
-      {{ form.sender }}
-
-      <label for="id_subject">Email Subject</label>
-      {{ form.subject }}
-
-      <label for="id_body">Message Content</label>
-      {{ form.body }}
+      <label for="id_email_file">Upload Email File (.eml)</label>
+      {{ form.email_file }}
 
       <button type="submit">Analyze Message</button>
     </form>
@@ -193,11 +212,11 @@
           {{ result.final_label }} ({{ result.score|floatformat:1 }}%)
         </h2>
         
-        <p><strong>AI Confidence:</strong> {{ result.ml_prob|floatformat:1 }}%</p>
+        <p><strong style="color: #94a3b8;">AI Confidence:</strong> {{ result.ml_prob|floatformat:1 }}%</p>
 
         <hr>
         
-        <strong>Flagged Indicators:</strong>
+        <strong style="color: #94a3b8;">Flagged Indicators:</strong>
         <ul>
           {% for r in result.rules %}
             <li>{{ r }}</li>
@@ -209,9 +228,9 @@
         <details>
           <summary>View Technical Breakdown</summary>
           <div class="details-content">
-            <p><strong>Keywords:</strong> {{ result.details.rules_triggered }}</p>
-            <p><strong>Sender Verif:</strong> {{ result.details.sender_check }}</p>
-            <p><strong>URLs:</strong> 
+            <p><strong style="color: #94a3b8;">Keywords:</strong> {{ result.details.rules_triggered }}</p>
+            <p><strong style="color: #94a3b8;">Sender Verif:</strong> {{ result.details.sender_check }}</p>
+            <p><strong style="color: #94a3b8;">URLs:</strong> 
               {% if result.urls %}
                 <code>{{ result.urls|join:", " }}</code>
               {% else %}
