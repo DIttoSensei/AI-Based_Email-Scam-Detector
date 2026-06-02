@@ -1,4 +1,4 @@
-# 📧 Email Fraud & Scam Detector (AI + Rule-Based Django App)
+# Email Fraud & Scam Detector (AI + Rule-Based Django App)
 
 ![Sqlite](https://img.shields.io/badge/Sqlite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
 ![Django](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=green)
@@ -13,17 +13,17 @@ It analyzes sender authenticity, suspicious URLs, keywords, and tone to determin
 
 ---
 
-## 🚀 Features
+##Features
 
-- 🧠 **AI Analyzer (Joblib Model)** – Trained on real email datasets to classify messages as Safe or Fraudulent.
-- 🧾 **Rule-Based Engine** – Flags suspicious elements like short URLs, phishing words, and uppercase abuse.
-- 🔍 **Detailed Analysis View** – Displays full breakdown of sender, URLs, and rule triggers.
-- 🎯 **Final Verdict** – Combines AI model prediction with rule-based confidence.
-- 💡 **User Guidance** – Offers safety recommendations based on results.
+- **AI Analyzer (Joblib Model)** – Trained on real email datasets to classify messages as Safe or Fraudulent.
+- **Rule-Based Engine** – Flags suspicious elements like short URLs, phishing words, and uppercase abuse.
+- **Detailed Analysis View** – Displays full breakdown of sender, URLs, and rule triggers.
+- **Final Verdict** – Combines AI model prediction with rule-based confidence.
+- **User Guidance** – Offers safety recommendations based on results.
 
 ---
 
-## ⚙️ Setup Instructions
+## Setup Instructions
 
 ### 1️⃣ Clone the Repository
 ```bash
