@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Email Fraud Detector</title>
+  <title>Unified Scam & Threat Detector</title>
   <style>
     /* 1. THE FOUNDATION (Gemini Space Dark theme) */
     body {
@@ -40,9 +40,42 @@
       background: linear-gradient(135deg, #a5b4fc 0%, #6366f1 50%, #4f46e5 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
       text-align: center;
       letter-spacing: -0.5px;
+    }
+
+    /* SEGMENTED TAB TOGGLES */
+    .detector-toggle {
+      display: flex;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 24px;
+    }
+
+    .toggle-btn {
+      flex: 1;
+      background: transparent;
+      color: #94a3b8;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .toggle-btn:hover {
+      color: #cbd5e1;
+    }
+
+    .toggle-btn.active {
+      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
     }
 
     /* 3. FORM STYLING */
@@ -61,7 +94,7 @@
       margin-bottom: 10px;
     }
 
-    /* Gemini-inspired File Upload Box */
+    /* File Input Styling */
     input[type="file"] {
       width: 100%;
       padding: 30px 20px;
@@ -75,7 +108,6 @@
       box-sizing: border-box;
       margin-bottom: 24px;
       cursor: pointer;
-      text-align: center;
     }
 
     input[type="file"]:hover, input[type="file"]:focus {
@@ -84,8 +116,32 @@
       box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
     }
 
-    /* Submit Button with Gradient Accent */
-    button {
+    /* Textarea Input Styling */
+    textarea {
+      width: 100%;
+      height: 140px;
+      padding: 16px;
+      border: 2px dashed rgba(99, 102, 241, 0.3);
+      border-radius: 16px;
+      background-color: rgba(15, 23, 42, 0.6);
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      outline: none;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+      margin-bottom: 24px;
+      resize: vertical;
+      font-family: inherit;
+    }
+
+    textarea:focus {
+      border-color: #818cf8;
+      background-color: rgba(99, 102, 241, 0.08);
+      box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
+    }
+
+    /* Action Buttons */
+    button[type="submit"] {
       width: 100%;
       padding: 16px;
       background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
@@ -99,13 +155,13 @@
       box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
     }
 
-    button:hover {
+    button[type="submit"]:hover {
       transform: translateY(-2px);
       box-shadow: 0 8px 20px rgba(79, 70, 229, 0.45);
       background: linear-gradient(135deg, #818cf8 0%, #4f46e5 100%);
     }
 
-    /* 4. RESULTS SECTION (Glow borders instead of solid light blocks) */
+    /* 4. RESULTS CONTAINER */
     .result {
       margin-top: 32px;
       padding: 24px;
@@ -119,7 +175,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Status Glow Colors */
     .safe { border: 1px solid rgba(34, 197, 94, 0.4); box-shadow: 0 0 15px rgba(34, 197, 94, 0.1); color: #e2f8e9; }
     .suspicious { border: 1px solid rgba(245, 158, 11, 0.4); box-shadow: 0 0 15px rgba(245, 158, 11, 0.1); color: #fef3c7; }
     .fraud { border: 1px solid rgba(239, 68, 68, 0.4); box-shadow: 0 0 15px rgba(239, 68, 68, 0.1); color: #fef2f2; }
@@ -143,7 +198,7 @@
       margin: 18px 0;
     }
 
-    /* 5. DETAILS & TECHNICAL DATA */
+    /* 5. DROP-DOWN DETAILS ACCORDIONS */
     details {
       margin-top: 15px;
       background: rgba(255, 255, 255, 0.03);
@@ -188,27 +243,53 @@
       color: #f472b6;
       border: 1px solid rgba(255, 255, 255, 0.05);
     }
+
+    /* VISIBILITY UTILITY */
+    .hidden {
+      display: none !important;
+    }
   </style>
 </head>
 <body>
 
   <main class="main_card">
-    <h1>Email Scam Detector</h1>
+    <h1 id="main-title">Email and SMS Scam Detector</h1>
 
-    <form method="post" enctype="multipart/form-data">
+    <div class="detector-toggle">
+      <button type="button" class="toggle-btn active" id="email-tab" onclick="switchMode('email')">Email File</button>
+      <button type="button" class="toggle-btn" id="sms-tab" onclick="switchMode('sms')">SMS Text</button>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" id="detector-form">
       {% csrf_token %}
       
-      <label for="id_email_file">Upload Email File (.eml)</label>
-      {{ form.email_file }}
+      <input type="hidden" name="analysis_mode" id="analysis-mode" value="{{ request.POST.analysis_mode|default:'email' }}">
 
-      <button type="submit">Analyze Message</button>
+      <div id="email-fields-group">
+        <label for="id_email_file">Upload Email File (.eml)</label>
+        {{ form.email_file }}
+      </div>
+
+      <div id="sms-fields-group" class="hidden">
+        <label for="id_sms_text">Paste SMS Message Content</label>
+        <textarea name="sms_text" id="id_sms_text" placeholder="Paste incoming spam message text metrics here...">{{ request.POST.sms_text }}</textarea>
+      </div>
+
+      <button type="submit" id="submit-btn">Analyze Message</button>
     </form>
 
-    {% if result %}
+    {% if result.error %}
+      <div class="result fraud">
+        <h2>Engine Error</h2>
+        <p>{{ result.error }}</p>
+      </div>
+    {% endif %}
+
+    {% if result and not result.error %}
       <div class="result {% if result.final_label == 'Low Risk: Safe' %}safe{% elif result.final_label == 'Needs Review: Suspicious' %}suspicious{% else %}fraud{% endif %}">
         
         <h2>
-          {% if result.final_label == "Low Risk: Safe" %}✅{% elif result.final_label == "Needs Review: Suspicious" %}⚠️{% else %}🚫{% endif %}
+          {% if result.final_label == "Low Risk: Safe" %}{% elif result.final_label == "Needs Review: Suspicious" %}{% else %}{% endif %}
           {{ result.final_label }} ({{ result.score|floatformat:1 }}%)
         </h2>
         
@@ -250,5 +331,49 @@
     {% endif %}
   </main>
 
+  <script>
+    function switchMode(mode) {
+      const emailGroup = document.getElementById('email-fields-group');
+      const smsGroup = document.getElementById('sms-fields-group');
+      const emailTab = document.getElementById('email-tab');
+      const smsTab = document.getElementById('sms-tab');
+      const modeInput = document.getElementById('analysis-mode');
+      const mainTitle = document.getElementById('main-title');
+      const submitBtn = document.getElementById('submit-btn');
+
+      const fileField = document.querySelector('input[type="file"]');
+      const textField = document.getElementById('id_sms_text');
+
+      if (mode === 'email') {
+        emailGroup.classList.remove('hidden');
+        smsGroup.classList.add('hidden');
+        emailTab.classList.add('active');
+        smsTab.classList.remove('active');
+        modeInput.value = 'email';
+        mainTitle.textContent = 'Email and SMS Scam Detector';
+        submitBtn.textContent = 'Analyze Message';
+        
+        if (fileField) fileField.required = true;
+        textField.required = false;
+      } else {
+        emailGroup.classList.add('hidden');
+        smsGroup.classList.remove('hidden');
+        emailTab.classList.remove('active');
+        smsTab.classList.add('active');
+        modeInput.value = 'sms';
+        mainTitle.textContent = 'SMS Spam Detector';
+        submitBtn.textContent = 'Analyze SMS';
+
+        if (fileField) fileField.required = false;
+        textField.required = true;
+      }
+    }
+
+    // Persists state configuration selections dynamically following form submissions
+    document.addEventListener("DOMContentLoaded", function() {
+      const activeStateMode = document.getElementById('analysis-mode').value;
+      switchMode(activeStateMode);
+    });
+  </script>
 </body>
 </html>

@@ -83,7 +83,7 @@ Think of this detector as a secure border checkpoint run by two different types 
                    ▼                           ▼
       ┌─────────────────────────┐ ┌─────────────────────────┐
       │   Rule-Based Heuristics │ │    Machine Learning     │
-      │   (The Veteran Inspector)│ │   (The Data Profiler)   │
+      │  (The Veteran Inspector)│ │   (The Data Profiler)   │
       ├─────────────────────────┤ ├─────────────────────────┤
       │ • Aggressive caps abuse │ │ • Vectorizes message    │
       │ • Known phishing links  │ │ • Computes probability  │
@@ -146,7 +146,7 @@ The pre-compiled `model.joblib` binary file was created through an optimization 
 ```text
 ┌──────────────┐      ┌─────────────────┐      ┌────────────────┐      ┌──────────────┐
 │ Training CSV │ ───> │ Text Tokenizer/ │ ───> │ Classification │ ───> │ Output Model │
-│   Dataset    │      │  Vectorization  │      │   Algorithm    │      │ (model.joblib)│
+│   Dataset    │      │  Vectorization  │      │   Algorithm    │      │(model.joblib)│
 └──────────────┘      └─────────────────┘      └────────────────┘      └──────────────┘
 ```
 
